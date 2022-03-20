@@ -11,10 +11,12 @@ public abstract class AbstractTableFrame extends JFrame {
 
     public abstract void insertRow(Object[] data);
 
-    public abstract void deleteRow(int itemId, int inventoryId);
+    public abstract void deleteRow(int id);
 
-    public abstract void setRow(Object[] data, int itemId, int inventoryId);
+    public abstract void setRow(Object[] data, int id);
 
-    public abstract Object[] getRow(int itemId, int inventoryId);
+    public abstract Object[] getRow(int id);
+
+    public abstract void emptyTable();
 }
 

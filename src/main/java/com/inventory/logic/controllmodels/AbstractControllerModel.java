@@ -28,10 +28,16 @@ public abstract class AbstractControllerModel {
 
     public abstract void refreshUI();
 
-    public abstract void onUserInput(UpdateType updateType, String targetAccessObject, String[] commands)
-            throws Exception;
+    public abstract void create(Object[] values, String daoName);
 
-    public abstract void readInput();
+    public abstract void delete(Object[] values, String daoName);
 
-    public abstract UpdateType getCommandType(String commandString);
+    public abstract void update(Object[] values, String daoName);
+
+//    public abstract void onUserInput(UpdateType updateType, String targetAccessObject, String[] commands)
+//            throws Exception;
+//
+//    public abstract void readInput();
+//
+//    public abstract UpdateType getCommandType(String commandString);
 }

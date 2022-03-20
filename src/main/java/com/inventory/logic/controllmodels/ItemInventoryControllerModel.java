@@ -8,10 +8,8 @@ import com.inventory.persistence.ItemDao;
 import com.inventory.persistence.ItemInventoryDao;
 import com.inventory.presentation.InventoryTableFrame;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+
 
 public class ItemInventoryControllerModel extends AbstractControllerModel {
     private static HashMap<String, UpdateType> commandTypes = new HashMap<String, UpdateType>() {
@@ -28,7 +26,6 @@ public class ItemInventoryControllerModel extends AbstractControllerModel {
         // Create DaoService singleton instance
         DaoService.createInstance();
         this.persistenceSP = DaoService.getInstance();
-        this.uiRenderer = new InventoryTableFrame(getHeaders(), "Inventory", ItemInventory.FIELD_LEN);
 
         persistenceSP.createNewDao(ItemInventory.DAO_REF_NAME, new ItemInventoryDao());
         persistenceSP.createNewDao(Item.DAO_REF_NAME, new ItemDao());
@@ -52,6 +49,15 @@ public class ItemInventoryControllerModel extends AbstractControllerModel {
         // Only allows UI to be initialized once
         if (uiInitialized) return;
 
+        this.uiRenderer = new InventoryTableFrame(getHeaders(), "Inventory", ItemInventory.FIELD_LEN);
+        refreshUI();
+    }
+
+
+    /* Rerenders all the items */
+    @Override
+    public void refreshUI() {
+        uiRenderer.emptyTable();
         // Grab all ItemInventory data for rendering
         data = persistenceSP.getDao(ItemInventory.DAO_REF_NAME).getAll();
         for (Object o: data)
@@ -68,101 +74,47 @@ public class ItemInventoryControllerModel extends AbstractControllerModel {
                 uiInitialized = true;
             }
         }
-    }
-
-
-    @Override
-    public void refreshUI() {
 
     }
 
     @Override
-    public UpdateType getCommandType(String commandString) {
-        return commandTypes.get(commandString);
-    }
-
-    private void handlesUpdate(String daoName, HashMap<String, Integer> commandArgsMap) throws Exception {
-        if(daoName.equals(ItemInventory.DAO_REF_NAME)) {
-            int id;
-            int inventoryId;
-            int available;
-            int inStock;
-            int onOrder;
-
-            id = commandArgsMap.get("-itemid");
-            inventoryId = commandArgsMap.get("-inventoryid");
-            available = commandArgsMap.get("-available");
-            inStock = commandArgsMap.get("-inStock");
-            onOrder = commandArgsMap.get("-onOrder");
-
-
-
-
-
-
-        }
-        else if (daoName.equals(Item.DAO_REF_NAME)) {
-            // Not allowing setting Item objects as of now
-        }
-        else {
-            throw new Exception();
-        }
-
-    }
-
-    private void handlesCreate(String daoName, HashMap<String, Integer> commandArgsMap) throws Exception {
-
-    }
-
-    private void handlesDelete(String daoName, HashMap<String, Integer> commandArgsMap) throws Exception {
-
-    }
-
-    @Override
-    public void onUserInput(UpdateType updateType, String daoName, String[] commands) throws Exception{
-        // Record the command arguemnt:Integer pair e.g. -id 2
-        HashMap<String, Integer> commandArgsMap = new HashMap<>();
-        for (int i = 0; i<commands.length; i+=2)
+    public void create(Object[] values, String daoName) {
+        if (daoName.equals(ItemInventory.DAO_REF_NAME))
         {
-            commandArgsMap.put(commands[i], Integer.parseInt(commands[i+1]));
+            // Get the itemId and create a new itemInventory record
+            try {
+                int itemId = Integer.parseInt(values[0].toString());
+                ItemInventory itemInventory = new ItemInventory(new Item(itemId, null, null), 0 ,0 ,0 ,0);
+                if (DaoService.getInstance().getDao(daoName).insert(itemInventory)) {
+                    refreshUI();
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
-
-        if (updateType == UpdateType.UPDATE) {
-
-
-        }
-        else if (updateType == UpdateType.DELETE) {
-
-
-        }
-        else if (updateType == UpdateType.CREATE) {
-
-        }
-
     }
 
     @Override
-    public void readInput() {
-        // D iteminventory -id 5 -itemid 6
-        //
-
-        // Starts scanning commands
-        Scanner scanner = new Scanner(System.in);
-        try {
-            // Get the action at Index 0 (C || U || D)
-            String[] commands = scanner.nextLine().split(" ");
-            UpdateType updateType = getCommandType(commands[0]);
-
-            if (updateType == null) throw new Exception("Command Invalid!");
-
-            // Redirect rest of command for specific actions
-            onUserInput(updateType, commands[1], Arrays.copyOfRange(commands, 2, commands.length));
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Command too short!");
-        }
-        catch (Exception e) {
-            System.err.println("Command invalid!");
+    public void delete(Object[] values, String daoName) {
+        if (daoName.equals(ItemInventory.DAO_REF_NAME))
+        {
+            // Get the itemId and create a new itemInventory record
+            try {
+                int id = Integer.parseInt(values[0].toString());
+                if (DaoService.getInstance().getDao(daoName).delete(id)) {
+                    uiRenderer.deleteRow(id);
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
+
+    @Override
+    public void update(Object[] values, String daoName) {
+
+    }
+
 }

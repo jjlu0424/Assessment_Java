@@ -6,5 +6,6 @@ import com.inventory.persistence.DaoService;
 public class Application {
     public static void main(String[] args) {
         Controller.createInstance(new ItemInventoryControllerModel());
+        Controller.getInstance().run();
     }
 }

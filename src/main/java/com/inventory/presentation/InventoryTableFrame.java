@@ -1,9 +1,18 @@
 package com.inventory.presentation;
 
 import com.inventory.logic.Controller;
+import com.inventory.logic.ItemInventory;
+import com.inventory.logic.UpdateType;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class InventoryTableFrame extends AbstractTableFrame {
@@ -16,32 +25,139 @@ public class InventoryTableFrame extends AbstractTableFrame {
         JTable table = new JTable(tableModel);
 
         JScrollPane pane = new JScrollPane(table);
+        pane.setBounds(0, 0, 880, 200);
 
-        // Default sizes
-        setSize(2048, 1152);
-        table.setBounds(0, 0, 1366, 768);
-        table.setRowHeight( 32 );
+        // Setting text fileds
+        JLabel itemIdLb = new JLabel("Item Id");
+        JTextField itemIdTF = new JTextField();
+
+        // Buttons
+        Button btnAdd = new Button("Add");
+        Button btnDelete = new Button("Delete");
+        Button btnUpdate = new Button("Update");
+
+        // Register controller to buttons
+        btnAdd.register(Controller.getInstance());
+        btnDelete.register(Controller.getInstance());
+        btnUpdate.register(Controller.getInstance());
+
+        // Setting layouts
+        itemIdLb.setBounds(300, 220, 50, 25);
+        itemIdTF.setBounds(350, 220, 100, 25);
+        btnAdd.setBounds(150, 220, 100, 25);
+        btnUpdate.setBounds(150, 265, 100, 25);
+        btnDelete.setBounds(150, 310, 100, 25);
+        setLayout(null);
 
         // Adding elements into the frame
         add(pane);
+        add(itemIdLb);
+        add(itemIdTF);
+        add(btnAdd);
+        add(itemIdTF);
+        add(btnDelete);
+        add(btnUpdate);
+
+
+        // Creating button methods
+        btnAdd.addActionListener(new DefaultActionListener(true) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] object = new Object[1];
+                try {
+                    object[0] = Integer.parseInt(itemIdTF.getText());
+                    publish(UpdateType.CREATE, object, ItemInventory.DAO_REF_NAME);
+                } catch (Exception err) {
+                    itemIdTF.setText("");
+                    err.printStackTrace();
+                }
+            };
+        });
+
+        // button remove row
+        btnDelete.addActionListener(new DefaultActionListener(true) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] objects = new Object[1];
+                try {
+                    int row = table.getSelectedRow();
+                    Object inventoryId = tableModel.getValueAt(row, 1);
+                    System.out.println(inventoryId);
+                    objects[0] = inventoryId;
+                    publish(UpdateType.DELETE, objects, ItemInventory.DAO_REF_NAME);
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            };
+        });
+
+        // get selected row data From table to textfields
+        table.addMouseListener(new MouseAdapter(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // i = the index of the selected row
+                int row = table.getSelectedRow();
+
+//                textId.setText(model.getValueAt(i, 0).toString());
+//                textFname.setText(model.getValueAt(i, 1).toString());
+//                textLname.setText(model.getValueAt(i, 2).toString());
+//                textAge.setText(model.getValueAt(i, 3).toString());
+            }
+        });
+
+        // button update row
+        btnUpdate.addActionListener(new DefaultActionListener(true){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                // i = the index of the selected row
+//                int i = table.getSelectedRow();
+//
+//                if(i >= 0)
+//                {
+//                    model.setValueAt(textId.getText(), i, 0);
+//                    model.setValueAt(textFname.getText(), i, 1);
+//                    model.setValueAt(textLname.getText(), i, 2);
+//                    model.setValueAt(textAge.getText(), i, 3);
+//                }
+//                else{
+//                    System.out.println("Update Error");
+//                }
+            }
+        });
+        tableModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+
+            }
+        });
+
+
         setVisible(true);
     }
 
-    public void insertRow(Object[] data)
-    {
-        tableModel.addRow(data);
+    public void insertRow(Object[] data) {
+        tableModel.insertRow(data);
     }
 
-    public void deleteRow(int itemId, int inventoryId) {
-        tableModel.deleteRow(itemId, inventoryId);
+    public void deleteRow(int inventoryId) {
+        tableModel.deleteRow(inventoryId);
     }
 
-    public void setRow(Object[] data, int itemId, int inventoryId)
-    {
-        tableModel.setRow(data, itemId, inventoryId);
+    public void setRow(Object[] data, int inventoryId) {
+        tableModel.setRow(data, inventoryId);
     }
 
-    public Object[] getRow(int itemId, int inventoryId) { return tableModel.getRow(itemId, inventoryId); }
+    public Object[] getRow(int inventoryId) {
+        return tableModel.getRow(inventoryId);
+    }
+
+    public void emptyTable() {
+        tableModel.clearTable();
+    }
+
 
     // Model for constructing Table
     private static class TableModel extends AbstractTableModel {
@@ -61,6 +177,8 @@ public class InventoryTableFrame extends AbstractTableFrame {
         }
 
         public int getRowCount() {
+            if (data == null) return 0;
+
             return data.size();
         }
 
@@ -75,40 +193,29 @@ public class InventoryTableFrame extends AbstractTableFrame {
         public void setValueAt(Object value, int row, int col) {
             data.get(row)[col] = value;
             fireTableCellUpdated(row, col);
-
         }
 
-        protected void addRow(Object[] row) {
-            data.add(row);
-            fireTableRowsInserted(data.size() - 1, data.size() - 1);
+        public void insertRow(Object[] rowData) {
+            data.add(rowData);
+            fireTableRowsInserted(data.size() , data.size());
         }
 
-        private void deleteRow(int row) {
-            data.remove(row);
-            fireTableRowsDeleted(row, row);
+        protected void deleteRow(int inventoryId) {
+            int row = findRowById(inventoryId);
+            if (row >= 0) {
+                data.remove(row);
+                fireTableRowsDeleted(row+1, row+1);
+            }
         }
 
-        protected void deleteRow(int itemId, int inventoryId) {
-            int row = findRowByIds(itemId, inventoryId);
-            if (row >= 0) deleteRow(row);
-        }
-
-        private void setRow(Object[] rowdata, int row) {
+        protected void setRow(Object[] rowdata, int inventoryId) {
+            int row = findRowById(inventoryId);
             data.set(row, rowdata);
-            fireTableRowsUpdated(row, row);
+            if (row >= 0) fireTableRowsUpdated(row+1, row+1);
         }
 
-        protected void setRow(Object[] rowdata, int itemId, int inventoryId) {
-            int row = findRowByIds(itemId, inventoryId);
-            setRow( rowdata, row);
-        }
-
-        private Object[] getRow(int row) {
-            return data.get(row);
-        }
-
-        protected Object[] getRow(int itemId, int inventoryId) {
-            int row = findRowByIds(itemId, inventoryId);
+        protected Object[] getRow(int inventoryId) {
+            int row = findRowById(inventoryId);
             if (row >= 0)
             {
                 return data.get(row);
@@ -116,15 +223,21 @@ public class InventoryTableFrame extends AbstractTableFrame {
             return null;
         }
 
-        protected int findRowByIds(int itemId, int inventoryId)
+        protected int findRowById(int inventoryId)
         {
             int row = -1;
             for (int i = 0; i<data.size(); i++)
             {
-                if (data.get(i).toString().equals(Integer.toString(itemId)) &&
-                        data.get(i).toString().equals(Integer.toString(inventoryId))) return i;
+                if (data.get(i)[1].toString().equals(Integer.toString(inventoryId))) return i;
             }
             return row;
+        }
+
+        protected void clearTable()
+        {
+            int size = data.size();
+            data.clear();
+            fireTableRowsDeleted(0, size);
         }
 
     }
