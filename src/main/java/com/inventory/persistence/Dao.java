@@ -1,5 +1,6 @@
 package com.inventory.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface Dao <T> {
@@ -8,7 +9,7 @@ public interface Dao <T> {
 
     T get(int id);
 
-    List<T> getAll();
+    ArrayList<T> getAll();
 
     boolean insert(T t);
 

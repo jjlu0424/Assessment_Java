@@ -13,6 +13,7 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
 
     @Override
     public boolean configure(String dbPath) {
+        System.out.println("here");
         dbUrl = dbPath;
         try {
             connection = DriverManager.getConnection(dbUrl);
@@ -21,22 +22,36 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
             throwables.printStackTrace();
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
     @Override
     public ItemInventory get(int id) {
-        ItemInventory itemInventory = new ItemInventory();
+        PreparedStatement pres = null;
+        ItemInventory itemInventory = null;
         try{
             String sql = "SELECT * " +
-                        "FROM ItemInventory INNER JOIN Items ON ItemInventory.ItemId = Items.Id" +
-                        "WHERE Item.Id =" + id;
-            Statement statement = connection.createStatement();
-            ResultSet res = statement.executeQuery(sql);
+                        "FROM ItemInventory INNER JOIN Items ON ItemInventory.ItemId = Items.Id " +
+                        "WHERE ItemInventory.InventoryId =?";
+            pres = connection.prepareStatement(sql);
+            pres.setInt(1, id);
+
+            ResultSet res = pres.executeQuery();
             while (res.next())
             {
-                System.out.println(res);
+                int itemId = res.getInt("Id");
+                String category = res.getString("Category");
+                String description = res.getString("Description");
+                Item item = new Item(itemId, category, description);
+
+                int inventoryId = res.getInt("InventoryId");
+                int available = res.getInt("Available");
+                int inStock = res.getInt("InStock");
+                int onOrder = res.getInt("OnOrder");
+                itemInventory = new ItemInventory(item, inventoryId, available, inStock, onOrder);
+                System.out.println(itemInventory);
             }
             return itemInventory;
         }catch (Exception e)
@@ -47,14 +62,14 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
     }
 
     @Override
-    public List<ItemInventory> getAll() {
-        List<ItemInventory> itemInventoryList = new ArrayList<>();
-
+    public ArrayList<ItemInventory> getAll() {
+        ArrayList<ItemInventory> itemInventoryList = new ArrayList<>();
+        PreparedStatement pres = null;
         try{
             String sql = "SELECT * FROM ItemInventory INNER JOIN Items ON ItemInventory.ItemId = Items.Id";
-            Statement statement = connection.createStatement();
+            pres = connection.prepareStatement(sql);
 
-            ResultSet res = statement.executeQuery(sql);
+            ResultSet res = pres.executeQuery();
             while (res.next())
             {
                 int id = res.getInt("Id");

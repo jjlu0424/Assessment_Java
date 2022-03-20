@@ -10,6 +10,7 @@ public class Button extends JButton {
     public Button(String text)
     {
         super(text);
+        evenListeners = new ArrayList<>();
     }
 
     public void register(EvenListener evenListener)

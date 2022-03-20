@@ -1,6 +1,7 @@
 package com.inventory.logic;
 
 public class Item {
+    public static final String DAO_REF_NAME = "item";
     private int id;
     private String category;
     private String description;

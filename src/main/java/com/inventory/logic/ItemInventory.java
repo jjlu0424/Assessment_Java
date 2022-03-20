@@ -1,7 +1,8 @@
 package com.inventory.logic;
 
-public class ItemInventory {
+public class ItemInventory{
      public static final String DAO_REF_NAME = "iteminventory";
+     public static final int FIELD_LEN = 7;
      private Item item;
      private int inventoryId;
      private int available;
@@ -35,6 +36,10 @@ public class ItemInventory {
     public void setOnOrder(int onOrder) {
         this.onOrder = onOrder;
     }
+
+    public String getItemCategory() { return item.getCategory(); }
+
+    public String getItemDescription() { return item.getDescription(); }
 
     public int getId() {
         return item.getId();
