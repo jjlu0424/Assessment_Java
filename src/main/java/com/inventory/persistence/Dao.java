@@ -1,9 +1,10 @@
 package com.inventory.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.inventory.logic.DTO;
 
-public interface Dao <T> {
+import java.util.ArrayList;
+
+public interface Dao <T extends DTO> {
 
     boolean configure(String dbPath);
 

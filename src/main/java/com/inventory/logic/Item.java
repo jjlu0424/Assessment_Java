@@ -1,7 +1,8 @@
 package com.inventory.logic;
 
-public class Item {
-    public static final String DAO_REF_NAME = "item";
+public class Item extends DTO {
+    public static final String DAO_REF_NAME = "items";
+    public static final int FIELD_LEN = 3;
     private int id;
     private String category;
     private String description;
@@ -30,5 +31,21 @@ public class Item {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public Object[] intoObjectArray() {
+        Object[] newArr = new Object[FIELD_LEN];
+        int currentIndex = 0;
+        newArr[currentIndex++] = getId();
+        newArr[currentIndex++] = getCategory();
+        newArr[currentIndex] = getDescription();
+
+        return newArr;
+    }
+
+    @Override
+    public boolean followsBusinessRule(Object[] objects) {
+        return true;
     }
 }

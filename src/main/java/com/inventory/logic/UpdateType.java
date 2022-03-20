@@ -1,7 +1,7 @@
 package com.inventory.logic;
 
 public enum UpdateType {
-    INSERT,
+    CREATE,
     DELETE,
     UPDATE
 }
