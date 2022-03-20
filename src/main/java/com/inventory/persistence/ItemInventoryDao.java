@@ -117,7 +117,7 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
     }
 
     @Override
-    public boolean update(ItemInventory itemInventory, ItemInventory updatedObject) {
+    public boolean update(ItemInventory updatedObject) {
         PreparedStatement pres = null;
         try {
             String sql = "UPDATE ItemInventory SET Available=?, InStock=?, OnOrder=? WHERE InventoryId=?";

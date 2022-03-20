@@ -8,9 +8,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -32,14 +30,9 @@ public class InventoryTableFrame extends AbstractTableFrame {
         JTextField itemIdTF = new JTextField();
 
         // Buttons
-        Button btnAdd = new Button("Add");
-        Button btnDelete = new Button("Delete");
-        Button btnUpdate = new Button("Update");
-
-        // Register controller to buttons
-        btnAdd.register(Controller.getInstance());
-        btnDelete.register(Controller.getInstance());
-        btnUpdate.register(Controller.getInstance());
+        JButton btnAdd = new JButton("Add");
+        JButton btnDelete = new JButton("Delete");
+        JButton btnUpdate = new JButton("Update");
 
         // Setting layouts
         itemIdLb.setBounds(300, 220, 50, 25);
@@ -68,8 +61,9 @@ public class InventoryTableFrame extends AbstractTableFrame {
                     object[0] = Integer.parseInt(itemIdTF.getText());
                     publish(UpdateType.CREATE, object, ItemInventory.DAO_REF_NAME);
                 } catch (Exception err) {
+                    System.err.println(err.toString());
+                } finally {
                     itemIdTF.setText("");
-                    err.printStackTrace();
                 }
             };
         });
@@ -86,10 +80,11 @@ public class InventoryTableFrame extends AbstractTableFrame {
                     objects[0] = inventoryId;
                     publish(UpdateType.DELETE, objects, ItemInventory.DAO_REF_NAME);
                 } catch (Exception err) {
-                    err.printStackTrace();
+                    System.err.println(err.toString());
                 }
             };
         });
+
 
         // get selected row data From table to textfields
         table.addMouseListener(new MouseAdapter(){
@@ -99,38 +94,24 @@ public class InventoryTableFrame extends AbstractTableFrame {
                 // i = the index of the selected row
                 int row = table.getSelectedRow();
 
-//                textId.setText(model.getValueAt(i, 0).toString());
-//                textFname.setText(model.getValueAt(i, 1).toString());
-//                textLname.setText(model.getValueAt(i, 2).toString());
-//                textAge.setText(model.getValueAt(i, 3).toString());
             }
         });
+
 
         // button update row
         btnUpdate.addActionListener(new DefaultActionListener(true){
 
             @Override
             public void actionPerformed(ActionEvent e) {
-
-//                // i = the index of the selected row
-//                int i = table.getSelectedRow();
-//
-//                if(i >= 0)
-//                {
-//                    model.setValueAt(textId.getText(), i, 0);
-//                    model.setValueAt(textFname.getText(), i, 1);
-//                    model.setValueAt(textLname.getText(), i, 2);
-//                    model.setValueAt(textAge.getText(), i, 3);
-//                }
-//                else{
-//                    System.out.println("Update Error");
-//                }
-            }
-        });
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-
+                int row = table.getSelectedRow();
+                if (table.getSelectedRow() >= 0) {
+                    int inventoryId = Integer.parseInt(table.getValueAt(row, 1).toString());
+                    int available = Integer.parseInt(table.getValueAt(row, 4).toString());
+                    int inStock = Integer.parseInt(table.getValueAt(row, 5).toString());
+                    int onOrder = Integer.parseInt(table.getValueAt(row, 6).toString());
+                    new UpdateWindow(InventoryTableFrame.this, "Update", inventoryId, available,
+                                    inStock, onOrder);
+                }
             }
         });
 
@@ -239,6 +220,5 @@ public class InventoryTableFrame extends AbstractTableFrame {
             data.clear();
             fireTableRowsDeleted(0, size);
         }
-
     }
 }

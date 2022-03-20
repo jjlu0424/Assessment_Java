@@ -9,6 +9,10 @@ public class ItemInventory extends DTO{
      private int inStock;
      private int onOrder;
 
+     public static ItemInventory createForSQLOperation(int itemId, int inventoryId, int available, int inStock, int onOrder) {
+         return new ItemInventory(new Item(itemId, null, null),
+                                inventoryId, available, inStock, onOrder);
+     }
 
     public ItemInventory(Item item) {
         this.item = item;
@@ -88,6 +92,18 @@ public class ItemInventory extends DTO{
 
     @Override
     public boolean followsBusinessRule(Object[] objects) {
+         if (objects.length != FIELD_LEN) {
+             return false;
+         }
+        int available = Integer.parseInt(objects[4].toString());
+        int inStock = Integer.parseInt(objects[5].toString());
+        int onOrder = Integer.parseInt(objects[6].toString());
+
+        if (available >= 0 && inStock >= 0 && onOrder >= 0)
+        {
+            return inStock >= available && available >= onOrder;
+        }
+
         return false;
     }
 }

@@ -101,7 +101,7 @@ public class ItemDao implements Dao<Item>{
     }
 
     @Override
-    public boolean update(Item itemInventory, Item updatedObject) {
+    public boolean update( Item updatedObject) {
         return false;
     }
 

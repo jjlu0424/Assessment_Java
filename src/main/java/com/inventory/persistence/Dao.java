@@ -14,7 +14,7 @@ public interface Dao <T extends DTO> {
 
     boolean insert(T t);
 
-    boolean update(T t, T updatedObject);
+    boolean update(T t);
 
     boolean delete(int id);
 
