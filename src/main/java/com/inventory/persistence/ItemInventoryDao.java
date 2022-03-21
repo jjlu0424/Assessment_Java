@@ -1,6 +1,7 @@
 package com.inventory.persistence;
 
 import com.inventory.domain.ItemInventory;
+import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         dbUrl = dbPath;
         try {
             connection = DriverManager.getConnection(dbUrl);
+            SQLiteConfig config = new SQLiteConfig();
+            config.enforceForeignKeys(true);
+            connection = DriverManager.getConnection(dbPath ,config.toProperties());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

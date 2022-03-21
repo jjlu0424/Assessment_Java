@@ -39,6 +39,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         JButton btnAdd = new JButton("Add");
         JButton btnDelete = new JButton("Delete");
         JButton btnUpdate = new JButton("Set");
+        JButton btnRefresh = new JButton("Refresh");
 
         // Setting layouts
         itemIdLb.setBounds(300, 220, 50, 25);
@@ -46,6 +47,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         btnAdd.setBounds(150, 220, 100, 25);
         btnUpdate.setBounds(150, 265, 100, 25);
         btnDelete.setBounds(150, 310, 100, 25);
+        btnRefresh.setBounds(150, 365, 100, 25);
         setLayout(null);
 
         // Adding elements into the frame
@@ -56,6 +58,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         add(itemIdTF);
         add(btnDelete);
         add(btnUpdate);
+        add(btnRefresh);
 
         // Creating button methods
         btnAdd.addActionListener(new DefaultActionListener(true) {
@@ -96,6 +99,13 @@ public class InventoryTableFrame extends AbstractTableFrame {
                     new UpdateWindow(InventoryTableFrame.this, "Update", tableModel.getRowAt(row).clone());
                     table.clearSelection();
                 };
+            }
+        });
+
+        btnRefresh.addActionListener(new DefaultActionListener(true){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                publish(UpdateType.UPDATE, null, ItemInventory.DAO_REF_NAME);
             }
         });
 

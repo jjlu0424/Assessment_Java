@@ -7,6 +7,8 @@ import com.inventory.persistence.ItemDao;
 import com.inventory.persistence.ItemInventoryDao;
 import com.inventory.presentation.AbstractTableFrame;
 import com.inventory.presentation.InventoryTableFrame;
+import com.inventory.logic.controllmodels.*;
+
 
 /**
  * The Controller model for this specific application
@@ -116,7 +118,6 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
     public void delete(Object[] values, String daoName) {
         if (daoName.equals(ItemInventory.DAO_REF_NAME))
         {
-            // Get the itemId and create a new itemInventory record
             try {
                 int id = Integer.parseInt(values[0].toString());
                 if (DaoService.getInstance().getDao(daoName).delete(id)) {
@@ -138,7 +139,7 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
     public void update(Object[] values, String daoName) {
         if (daoName.equals(ItemInventory.DAO_REF_NAME))
         {
-            // Get the itemId and create a new itemInventory record
+            // Update the ItemInventory intance whose has the id
             try {
                 int id = Integer.parseInt(values[ItemInventory.INV_ID_IND].toString());
                 ItemInventory itemInventory = ItemInventory.fromObjectArray(values);
