@@ -1,20 +1,27 @@
 package com.inventory.persistence;
 
-import com.inventory.logic.Item;
+import com.inventory.domain.Item;
 
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Data Access Object for Item object {@link com.inventory.domain.Item}
+ * @author  Mei-Hung Lu
+ * @version 1.0
+ * @since   21-03-2022
+ */
 public class ItemDao implements Dao<Item>{
-    private String dbUrl;
     private Connection connection;
 
+    /**
+     * Configures with database path
+     * @param dbPath The path or url of the Database
+     */
     @Override
     public boolean configure(String dbPath) {
-        System.out.println("here");
-        dbUrl = dbPath;
         try {
-            connection = DriverManager.getConnection(dbUrl);
+            connection = DriverManager.getConnection(dbPath);
             return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -25,6 +32,11 @@ public class ItemDao implements Dao<Item>{
         }
     }
 
+    /**
+     * Get a single record with specified id
+     * @param id The id of the sought resource
+     * @return Item The result of the query
+     */
     @Override
     public Item get(int id) {
         PreparedStatement pres = null;
@@ -42,7 +54,7 @@ public class ItemDao implements Dao<Item>{
                 int itemId = res.getInt("Id");
                 String category = res.getString("Category");
                 String description = res.getString("Description");
-                item = new Item(itemId, category, description);
+                item = Item.create(itemId, category, description);
             }
             return item;
         }catch (Exception e)
@@ -52,6 +64,10 @@ public class ItemDao implements Dao<Item>{
         }
     }
 
+    /**
+     * Get all records with specified id
+     * @return ArrayList<Item> The result of query in an ArrayList
+     */
     @Override
     public ArrayList<Item> getAll() {
         ArrayList<Item> itemList = new ArrayList<>();
@@ -66,7 +82,7 @@ public class ItemDao implements Dao<Item>{
                 int id = res.getInt("Id");
                 String category = res.getString("Category");
                 String description = res.getString("Description");
-                Item item = new Item(id, category, description);
+                Item item = Item.create(id, category, description);
 
                 itemList.add(item);;
             }
@@ -78,6 +94,11 @@ public class ItemDao implements Dao<Item>{
         }
     }
 
+    /**
+     * Inserts a record into the database
+     * @param item The record to be inserted
+     * @return boolean Whether the insertion is successful
+     */
     @Override
     public boolean insert(Item item) {
         PreparedStatement pres = null;
@@ -100,11 +121,21 @@ public class ItemDao implements Dao<Item>{
         }
     }
 
+    /**
+     * Update a record in the database
+     * @param updatedObject The record to be updated
+     * @return boolean Whether the update is successful
+     */
     @Override
-    public boolean update( Item updatedObject) {
+    public boolean update(Item updatedObject) {
         return false;
     }
 
+    /**
+     * Delete a record from the database
+     * @param inventoryId The id of the record to be deleted
+     * @return boolean Whether the deletion is successful
+     */
     @Override
     public boolean delete(int inventoryId) {
         return false;

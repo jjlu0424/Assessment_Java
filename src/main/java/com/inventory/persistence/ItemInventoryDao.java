@@ -1,16 +1,24 @@
 package com.inventory.persistence;
 
-import com.inventory.logic.Item;
-import com.inventory.logic.ItemInventory;
+import com.inventory.domain.ItemInventory;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Data Access Object for {@link com.inventory.domain.ItemInventory}
+ * @author  Mei-Hung Lu
+ * @version 1.0
+ * @since   21-03-2022
+ */
 public class ItemInventoryDao implements Dao<ItemInventory> {
     private String dbUrl;
     private Connection connection;
 
+    /**
+     * Configures with database path
+     * @param dbPath The path or url of the Database
+     */
     @Override
     public boolean configure(String dbPath) {
         System.out.println("here");
@@ -27,6 +35,11 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         }
     }
 
+    /**
+     * Get a single record with specified id
+     * @param id The id of the sought resource
+     * @return ItemInventory The result of the query
+     */
     @Override
     public ItemInventory get(int id) {
         PreparedStatement pres = null;
@@ -44,14 +57,14 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
                 int itemId = res.getInt("Id");
                 String category = res.getString("Category");
                 String description = res.getString("Description");
-                Item item = new Item(itemId, category, description);
 
                 int inventoryId = res.getInt("InventoryId");
                 int available = res.getInt("Available");
                 int inStock = res.getInt("InStock");
                 int onOrder = res.getInt("OnOrder");
-                itemInventory = new ItemInventory(item, inventoryId, available, inStock, onOrder);
-                System.out.println(itemInventory);
+                itemInventory = ItemInventory.create(id, category, description, inventoryId, available,
+                                                    inStock, onOrder);
+
             }
             return itemInventory;
         }catch (Exception e)
@@ -61,6 +74,10 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         }
     }
 
+    /**
+     * Get all records with specified id
+     * @return ArrayList<ItemInventory> The result of query in an ArrayList
+     */
     @Override
     public ArrayList<ItemInventory> getAll() {
         ArrayList<ItemInventory> itemInventoryList = new ArrayList<>();
@@ -75,13 +92,13 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
                 int id = res.getInt("Id");
                 String category = res.getString("Category");
                 String description = res.getString("Description");
-                Item item = new Item(id, category, description);
 
                 int inventoryId = res.getInt("InventoryId");
                 int available = res.getInt("Available");
                 int inStock = res.getInt("InStock");
                 int onOrder = res.getInt("OnOrder");
-                ItemInventory itemInventory = new ItemInventory(item, inventoryId, available, inStock, onOrder);
+                ItemInventory itemInventory = ItemInventory.create(id, category, description, inventoryId, available,
+                                                                    inStock, onOrder);
 
                 itemInventoryList.add(itemInventory);;
             }
@@ -93,6 +110,11 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         }
     }
 
+    /**
+     * Inserts a record into the database
+     * @param itemInventory The record to be inserted
+     * @return boolean Whether the insertion is successful
+     */
     @Override
     public boolean insert(ItemInventory itemInventory) {
         PreparedStatement pres = null;
@@ -116,6 +138,11 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         }
     }
 
+    /**
+     * Update a record in the database
+     * @param updatedObject The record to be updated
+     * @return boolean Whether the update is successful
+     */
     @Override
     public boolean update(ItemInventory updatedObject) {
         PreparedStatement pres = null;
@@ -137,6 +164,11 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         }
     }
 
+    /**
+     * Delete a record from the database
+     * @param inventoryId The id of the record to be deleted
+     * @return boolean Whether the deletion is successful
+     */
     @Override
     public boolean delete(int inventoryId) {
         PreparedStatement pres = null;

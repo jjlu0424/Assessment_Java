@@ -2,21 +2,45 @@ package com.inventory.presentation;
 
 import javax.swing.*;
 
-
+/**
+ * UI Provider for displaying table view
+ * @author  Mei-Hung Lu
+ * @version 1.0
+ * @since   21-03-2022
+ */
 public abstract class AbstractTableFrame extends JFrame {
-        public AbstractTableFrame(String title) {
-            super();
-            setTitle(title);
-        }
+    /**
+     *
+     * @param title The title of the UI
+     */
+    public AbstractTableFrame(String title) {
+        super();
+        setTitle(title);
+    }
 
+
+    /**
+     * Insert a row into table view
+     * @param data The data to be inserted
+     */
     public abstract void insertRow(Object[] data);
 
-    public abstract void deleteRow(int id);
+    /**
+     * Delete a row from table view
+     * @param row The row to be deleted
+     */
+    public abstract void deleteRow(int row);
 
-    public abstract void setRow(Object[] data, int id);
+    /**
+     * Update a row from table view
+     * @param data The updated data
+     * @param row The row to be updated
+     */
+    public abstract void setRow(Object[] data, int row);
 
-    public abstract Object[] getRow(int id);
-
+    /**
+     * Empties the whole tabke view
+     */
     public abstract void emptyTable();
 }
 

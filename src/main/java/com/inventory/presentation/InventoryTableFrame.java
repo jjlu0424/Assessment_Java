@@ -1,25 +1,31 @@
 package com.inventory.presentation;
 
-import com.inventory.logic.Controller;
-import com.inventory.logic.ItemInventory;
+import com.inventory.domain.ItemInventory;
 import com.inventory.logic.UpdateType;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * The specific UI Provider for displaying table view for inventory
+ * @author  Mei-Hung Lu
+ * @version 1.0
+ * @since   21-03-2022
+ */
 public class InventoryTableFrame extends AbstractTableFrame {
     private final TableModel tableModel;
 
-    public InventoryTableFrame(String[] headers, String title, int dataFieldLength) {
+    /**
+     *
+     * @param headers Table headers
+     * @param title The title of the UI
+     */
+    public InventoryTableFrame(String[] headers, String title) {
         super(title);
 
-        tableModel = new TableModel(new ArrayList<>(), headers, dataFieldLength);
+        tableModel = new TableModel(new ArrayList<>(), headers);
         JTable table = new JTable(tableModel);
 
         JScrollPane pane = new JScrollPane(table);
@@ -32,7 +38,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         // Buttons
         JButton btnAdd = new JButton("Add");
         JButton btnDelete = new JButton("Delete");
-        JButton btnUpdate = new JButton("Update");
+        JButton btnUpdate = new JButton("Set");
 
         // Setting layouts
         itemIdLb.setBounds(300, 220, 50, 25);
@@ -51,7 +57,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         add(btnDelete);
         add(btnUpdate);
 
-
+        // TODO: Change those to strategy pattern
         // Creating button methods
         btnAdd.addActionListener(new DefaultActionListener(true) {
             @Override
@@ -75,8 +81,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
                 Object[] objects = new Object[1];
                 try {
                     int row = table.getSelectedRow();
-                    Object inventoryId = tableModel.getValueAt(row, 1);
-                    System.out.println(inventoryId);
+                    Object inventoryId = tableModel.getValueAt(row, 1);;
                     objects[0] = inventoryId;
                     publish(UpdateType.DELETE, objects, ItemInventory.DAO_REF_NAME);
                 } catch (Exception err) {
@@ -85,98 +90,96 @@ public class InventoryTableFrame extends AbstractTableFrame {
             };
         });
 
-
-        // get selected row data From table to textfields
-        table.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // i = the index of the selected row
-                int row = table.getSelectedRow();
-
-            }
-        });
-
-
         // button update row
         btnUpdate.addActionListener(new DefaultActionListener(true){
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
                 if (table.getSelectedRow() >= 0) {
-                    int inventoryId = Integer.parseInt(table.getValueAt(row, 1).toString());
-                    int available = Integer.parseInt(table.getValueAt(row, 4).toString());
-                    int inStock = Integer.parseInt(table.getValueAt(row, 5).toString());
-                    int onOrder = Integer.parseInt(table.getValueAt(row, 6).toString());
-                    new UpdateWindow(InventoryTableFrame.this, "Update", inventoryId, available,
-                                    inStock, onOrder);
-                }
+                    new UpdateWindow(InventoryTableFrame.this, "Update", tableModel.getRowAt(row).clone());
+                    table.clearSelection();
+                };
             }
         });
-
 
         setVisible(true);
     }
 
+    /**
+     * Insert a row into table view
+     * @param data The data to be inserted
+     */
+    @Override
     public void insertRow(Object[] data) {
         tableModel.insertRow(data);
     }
 
+    /**
+     * Delete a row from table view
+     * @param inventoryId The row containing inventoryId will be deleted
+     */
+    @Override
     public void deleteRow(int inventoryId) {
         tableModel.deleteRow(inventoryId);
     }
 
+    /**
+     * Update a row from table view
+     * @param data The updated data
+     * @param inventoryId The row containing inventoryId will be updated
+     */
+    @Override
     public void setRow(Object[] data, int inventoryId) {
         tableModel.setRow(data, inventoryId);
     }
 
-    public Object[] getRow(int inventoryId) {
-        return tableModel.getRow(inventoryId);
-    }
-
+    /**
+     * Empties the whole table view
+     */
+    @Override
     public void emptyTable() {
         tableModel.clearTable();
     }
-
 
     // Model for constructing Table
     private static class TableModel extends AbstractTableModel {
         private final String[] headers;
         private ArrayList<Object[]> data;
-        private final int dataFieldLength;
 
-        public TableModel(ArrayList<Object[]> data, String[] headers, int dataFieldLength) {
+        public TableModel(ArrayList<Object[]> data, String[] headers) {
             super();
             this.data = data;
             this.headers = headers;
-            this.dataFieldLength = dataFieldLength;
         }
 
+        @Override
         public int getColumnCount() {
             return headers.length;
         }
 
+        @Override
         public int getRowCount() {
             if (data == null) return 0;
-
             return data.size();
         }
 
+        @Override
         public String getColumnName(int col) {
             return headers[col];
         }
 
+        @Override
         public Object getValueAt(int row, int col) {
             return data.get(row)[col];
         }
 
+        @Override
         public void setValueAt(Object value, int row, int col) {
             data.get(row)[col] = value;
             fireTableCellUpdated(row, col);
         }
 
-        public void insertRow(Object[] rowData) {
+        protected void insertRow(Object[] rowData) {
             data.add(rowData);
             fireTableRowsInserted(data.size() , data.size());
         }
@@ -186,6 +189,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
             if (row >= 0) {
                 data.remove(row);
                 fireTableRowsDeleted(row+1, row+1);
+                fireTableDataChanged();
             }
         }
 
@@ -202,6 +206,10 @@ public class InventoryTableFrame extends AbstractTableFrame {
                 return data.get(row);
             }
             return null;
+        }
+
+        protected Object[] getRowAt(int row) {
+            return data.get(row);
         }
 
         protected int findRowById(int inventoryId)
