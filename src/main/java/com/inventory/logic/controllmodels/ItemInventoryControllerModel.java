@@ -102,7 +102,7 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
                 }
             } catch (Exception e)
             {
-                e.printStackTrace();
+                System.err.println("Something went wrong when trying to create");
             }
         }
     }
@@ -124,7 +124,7 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
                 }
             } catch (Exception e)
             {
-               System.err.println("Something went wrong");
+               System.err.println("Something went wrong when trying to delete");
             }
         }
     }
@@ -151,7 +151,7 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
                 }
             } catch (Exception e)
             {
-                e.printStackTrace();
+                System.err.println("Something went wrong when trying to update");
             }
         }
     }

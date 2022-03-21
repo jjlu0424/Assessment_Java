@@ -23,9 +23,6 @@ public class ItemDao implements Dao<Item>{
         try {
             connection = DriverManager.getConnection(dbPath);
             return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -115,7 +112,7 @@ public class ItemDao implements Dao<Item>{
             // .executeUpdate() for INSERT, UPDATE, DELETE
             pres.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

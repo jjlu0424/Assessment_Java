@@ -25,9 +25,6 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
         try {
             connection = DriverManager.getConnection(dbUrl);
             return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -131,7 +128,7 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
             // .executeUpdate() for INSERT, UPDATE, DELETE
             pres.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -157,7 +154,7 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
             // .executeUpdate() for INSERT, UPDATE, DELETE
             pres.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -180,7 +177,7 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
             // .executeUpdate() for INSERT, UPDATE, DELETE
             pres.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

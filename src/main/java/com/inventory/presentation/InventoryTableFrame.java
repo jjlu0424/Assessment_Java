@@ -66,8 +66,6 @@ public class InventoryTableFrame extends AbstractTableFrame {
                     object[0] = Integer.parseInt(itemIdTF.getText());
                     publish(UpdateType.CREATE, object, ItemInventory.DAO_REF_NAME);
                 } catch (Exception err) {
-                    System.err.println(err.toString());
-                } finally {
                     itemIdTF.setText("");
                 }
             };
