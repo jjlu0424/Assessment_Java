@@ -10,8 +10,6 @@ import com.inventory.logic.controllmodels.AbstractControllerModel;
  */
 public class Controller implements EventListener {
     private static Controller instance;
-    private final String dbUrl =
-            "jdbc:sqlite:/C:\\Users\\jjlu0\\Desktop\\Sqlite\\sqlite-tools-win32-x86-3380100\\InventoryDb.db";
 
     private final AbstractControllerModel controllerModel;
 
@@ -43,6 +41,8 @@ public class Controller implements EventListener {
 
     private Controller(AbstractControllerModel cm)  {
         this.controllerModel = cm;
+        String dbUrl =
+                System.getProperty("user.dir") + "/dbConfig/sqlite-tools-win32-x86-3380100/InventoryDb.db";
         if (!controllerModel.configureAccessObject(dbUrl)) {
             System.err.println("Something went wrong");
             System.exit(1);

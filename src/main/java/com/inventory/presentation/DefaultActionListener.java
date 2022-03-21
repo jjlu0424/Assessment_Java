@@ -47,7 +47,6 @@ public class DefaultActionListener implements ActionListener, SubjectBase {
     {
         for (EventListener eventListener : eventListeners)
         {
-            System.out.println(eventListener);
             eventListener.update(updateType, values, daoName);
         }
     }

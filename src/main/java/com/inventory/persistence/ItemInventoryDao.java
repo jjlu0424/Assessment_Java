@@ -21,7 +21,6 @@ public class ItemInventoryDao implements Dao<ItemInventory> {
      */
     @Override
     public boolean configure(String dbPath) {
-        System.out.println("here");
         dbUrl = dbPath;
         try {
             connection = DriverManager.getConnection(dbUrl);

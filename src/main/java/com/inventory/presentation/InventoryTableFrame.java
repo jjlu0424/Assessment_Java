@@ -140,7 +140,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         tableModel.clearTable();
     }
 
-    // Model for table constructions and manipulations
+    // Model for table constructions and manipulations specific to this table
     private static class TableModel extends AbstractTableModel {
         private final String[] headers;
         private ArrayList<Object[]> data;

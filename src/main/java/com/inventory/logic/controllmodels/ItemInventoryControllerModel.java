@@ -147,7 +147,6 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
                         && itemInventory.followsBusinessRule()
                         && DaoService.getInstance().getDao(daoName).update(itemInventory))
                 {
-                    System.out.println("here!");
                     uiRenderer.setRow(values, id);
                 }
             } catch (Exception e)
