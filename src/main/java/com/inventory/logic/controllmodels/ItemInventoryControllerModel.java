@@ -82,7 +82,6 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
                 uiInitialized = true;
             }
         }
-
     }
 
     /**
@@ -141,7 +140,7 @@ public class ItemInventoryControllerModel extends AbstractControllerModel <DaoSe
         {
             // Get the itemId and create a new itemInventory record
             try {
-                int id = Integer.parseInt(values[1].toString());
+                int id = Integer.parseInt(values[ItemInventory.INV_ID_IND].toString());
                 ItemInventory itemInventory = ItemInventory.fromObjectArray(values);
 
                 if (itemInventory != null

@@ -13,6 +13,21 @@ public class Item extends DTO {
     public static final String DAO_REF_NAME = "items";
 
     /**
+     * The index of itemId in an object array representation of the class instance
+     */
+    public static final int ID_IND = 0;
+
+    /**
+     * The index of category in an object array representation of the class instance
+     */
+    public static final int CATEGORY_IND = 2;
+
+    /**
+     * The index of description in an object array representation of the class instance
+     */
+    public static final int ITEM_DECRIIP_IND = 3;
+
+    /**
      * Number of fields
      */
     public static final int FIELD_LEN = 3;

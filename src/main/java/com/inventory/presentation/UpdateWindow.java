@@ -31,9 +31,9 @@ public class UpdateWindow extends JDialog {
         updateButton.setBounds(200, 200, 100, 100);
 
         // Setting field texts
-        availableTF.setText(values[4].toString());
-        inStockTF.setText(values[5].toString());
-        onOrderTF.setText(values[6].toString());
+        availableTF.setText(values[ItemInventory.AVAILABLE_PROP_IND].toString());
+        inStockTF.setText(values[ItemInventory.INSTOCK_PROP_IND].toString());
+        onOrderTF.setText(values[ItemInventory.ONORDER_PROP_IND].toString());
 
         // Add in elements
         add(availableLabel);
@@ -50,16 +50,16 @@ public class UpdateWindow extends JDialog {
             public void actionPerformed(ActionEvent e)
             {
                 try {
-                    values[4] = Integer.parseUnsignedInt(availableTF.getText());
-                    values[5] = Integer.parseUnsignedInt(inStockTF.getText());
-                    values[6] = Integer.parseUnsignedInt(onOrderTF.getText());
+                    values[ItemInventory.AVAILABLE_PROP_IND] = Integer.parseUnsignedInt(availableTF.getText());
+                    values[ItemInventory.INSTOCK_PROP_IND] = Integer.parseUnsignedInt(inStockTF.getText());
+                    values[ItemInventory.ONORDER_PROP_IND] = Integer.parseUnsignedInt(onOrderTF.getText());
                     publish(UpdateType.UPDATE, values, ItemInventory.DAO_REF_NAME);
                     setVisible(false);
                 } catch (Exception err)
                 {
-                    availableTF.setText(values[4].toString());
-                    inStockTF.setText(values[5].toString());
-                    onOrderTF.setText(values[6].toString());
+                    availableTF.setText(values[ItemInventory.AVAILABLE_PROP_IND].toString());
+                    inStockTF.setText(values[ItemInventory.INSTOCK_PROP_IND].toString());
+                    onOrderTF.setText(values[ItemInventory.ONORDER_PROP_IND].toString());
                 }
             }
         });

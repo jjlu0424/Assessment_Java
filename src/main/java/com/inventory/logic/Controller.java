@@ -54,7 +54,6 @@ public class Controller implements EventListener {
      */
     @Override
     public void update(UpdateType updateType, Object[] values, String daoName) {
-        System.out.println("hi");
         switch (updateType)
         {
             case CREATE -> this.controllerModel.create(values, daoName);

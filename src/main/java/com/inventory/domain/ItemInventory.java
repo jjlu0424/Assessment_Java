@@ -6,7 +6,7 @@ package com.inventory.domain;
  * @version 1.0
  * @since   21-03-2022
  */
-public class ItemInventory extends DTO{
+public class ItemInventory extends DTO {
     /**
      * The referred name of this class by {@link com.inventory.persistence.Dao}
      */
@@ -16,12 +16,48 @@ public class ItemInventory extends DTO{
      * Number of fields
      */
      public static final int FIELD_LEN = 7;
+
+     /**
+     * The index of itemId in an object array representation of the class instance
+     */
+     public static final int ITEM_ID_IND = 0;
+
+     /**
+     * The index of inventoryId in an object array representation of the class instance
+     */
+     public static final int INV_ID_IND = 1;
+
+     /**
+     * The index of category in an object array representation of the class instance
+     */
+     public static final int ITEM_CATEGORY_IND = 2;
+
+    /**
+     * The index of description in an object array representation of the class instance
+     */
+     public static final int ITEM_DECRIIP_IND = 3;
+
+    /**
+     * The index of available in an object array representation of the class instance
+     */
+     public static final int AVAILABLE_PROP_IND = 4;
+
+    /**
+     * The index of inStock in an object array representation of the class instance
+     */
+     public static final int INSTOCK_PROP_IND = 5;
+
+    /**
+     * The index of onOrder in an object array representation of the class instance
+     */
+     public static final int ONORDER_PROP_IND = 6;
+
+
      private Item item;
      private int inventoryId;
      private int available;
      private int inStock;
      private int onOrder;
-
 
     /**
      * Creates a ItemInventory instance
@@ -63,13 +99,13 @@ public class ItemInventory extends DTO{
              if (values.length != FIELD_LEN) return null;
 
              // Grabbing field data from object array
-             int itemId = Integer.parseInt(values[0].toString());
-             int inventoryId = Integer.parseInt(values[1].toString());
-             String category = values[2].toString();
-             String descriptipn = values[3].toString();
-             int available = Integer.parseInt(values[4].toString());
-             int inStock = Integer.parseInt(values[5].toString());
-             int onOrder = Integer.parseInt(values[6].toString());
+             int itemId = Integer.parseInt(values[ITEM_ID_IND].toString());
+             int inventoryId = Integer.parseInt(values[INV_ID_IND].toString());
+             String category = values[ITEM_CATEGORY_IND].toString();
+             String descriptipn = values[ITEM_DECRIIP_IND].toString();
+             int available = Integer.parseInt(values[AVAILABLE_PROP_IND].toString());
+             int inStock = Integer.parseInt(values[INSTOCK_PROP_IND].toString());
+             int onOrder = Integer.parseInt(values[ONORDER_PROP_IND].toString());
 
              Item item = Item.create(itemId, category, descriptipn);
              return new ItemInventory(item, inventoryId, available, inStock, onOrder);

@@ -57,7 +57,6 @@ public class InventoryTableFrame extends AbstractTableFrame {
         add(btnDelete);
         add(btnUpdate);
 
-        // TODO: Change those to strategy pattern
         // Creating button methods
         btnAdd.addActionListener(new DefaultActionListener(true) {
             @Override
@@ -81,7 +80,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
                 Object[] objects = new Object[1];
                 try {
                     int row = table.getSelectedRow();
-                    Object inventoryId = tableModel.getValueAt(row, 1);;
+                    Object inventoryId = tableModel.getValueAt(row, ItemInventory.INV_ID_IND);;
                     objects[0] = inventoryId;
                     publish(UpdateType.DELETE, objects, ItemInventory.DAO_REF_NAME);
                 } catch (Exception err) {
@@ -141,7 +140,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         tableModel.clearTable();
     }
 
-    // Model for constructing Table
+    // Model for table constructions and manipulations
     private static class TableModel extends AbstractTableModel {
         private final String[] headers;
         private ArrayList<Object[]> data;
@@ -188,7 +187,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
             int row = findRowById(inventoryId);
             if (row >= 0) {
                 data.remove(row);
-                fireTableRowsDeleted(row+1, row+1);
+                fireTableRowsDeleted(row + 1, row + 1);
                 fireTableDataChanged();
             }
         }
@@ -196,7 +195,7 @@ public class InventoryTableFrame extends AbstractTableFrame {
         protected void setRow(Object[] rowdata, int inventoryId) {
             int row = findRowById(inventoryId);
             data.set(row, rowdata);
-            if (row >= 0) fireTableRowsUpdated(row+1, row+1);
+            if (row >= 0) fireTableRowsUpdated(row + 1, row + 1);
         }
 
         protected Object[] getRow(int inventoryId) {
